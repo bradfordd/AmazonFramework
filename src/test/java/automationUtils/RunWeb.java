@@ -1,17 +1,17 @@
 package automationUtils;
 
+import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.annotations.AfterMethod;
 
 public class RunWeb {
-	private String frameworkDirectory = System.getProperty("user.dir");
-	protected WebDriver driver;
+	public String frameworkDirectory = System.getProperty("user.dir");
+	public WebDriver driver;
 	
-	public RunWeb(String webBrowser) {
-		initializeWebDriver(webBrowser);
-	}
 	
 	public void initializeWebDriver(String webBrowser) {
 		webBrowser = webBrowser.toLowerCase();
@@ -19,25 +19,28 @@ public class RunWeb {
 		case "chrome":
 			System.setProperty("webdriver.chrome.driver", frameworkDirectory + "\\browserDrivers\\chromedriver.exe");
 			driver = new ChromeDriver();
+			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			break;
 		case "edge":
 			System.out.println(frameworkDirectory + "\\browserDrivers\\msedgedriver.exe");
 			driver = new FirefoxDriver();
+			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			break;
 		case "firefox":
 			System.setProperty("webdriver.gecko.driver", frameworkDirectory + "\\browserDrivers\\geckodriver.exe");
 			driver = new EdgeDriver();
+			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			break;
 		default:
 			System.out.println("improper settings for WebBrowser, using default webbrowser (Chrome)");
 			System.setProperty("webdriver.chrome.driver", frameworkDirectory + "\\browserDrivers\\chromedriver.exe");
 			driver = new ChromeDriver();
+			driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 			break;
 		}
 	}
-	
-	public static void main(String[] args) {
-		RunWeb r = new RunWeb("chrome");
-		r.initializeWebDriver("chrome");
+	public void tearDown() {
+		driver.close();
 	}
+	
 }
