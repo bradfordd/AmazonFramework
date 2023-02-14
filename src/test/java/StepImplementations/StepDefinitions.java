@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.testng.annotations.Test;
 
 import automationUtils.RunWeb;
+import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -20,16 +21,16 @@ public class StepDefinitions extends RunWeb{
 		initializeWebDriver("Chrome");
 		AmazonHomePage.navigateToAmazonHomePage(driver);
 	}
-	@Given("User Searches For Item")
-	public void Search_For_Item() {
+	@Given("User Searches For (.+)$")
+	public void Search_For_Item(String item) {
 		h = new AmazonHomePage(driver);
-		h.searchForItem("1:64 Diecast");
+		h.searchForItem(item);
 	}
-	@And("User selects first item on Search Page")
-	public void Select_First_item() {
+	@And("User is navigated to (.+) search results page, selects first item on Search Page$")
+	public void Select_First_item(String item) {
 		s = new AmazonSearchResultsPage(driver);
-		s.verifyCorrectSearch("1:64 Diecast");
-		Assert.assertTrue(s.getSearchResultsPerPage() > 0);
+		s.verifyCorrectSearch(item);
+		Assert.assertTrue("No search results found on page.", s.getSearchResultsPerPage() > 0);
 		String itemName = s.getItemName(0);
 		s.selectItemFromSearchResults(0);
 	}
@@ -37,6 +38,10 @@ public class StepDefinitions extends RunWeb{
 	@Then("Product details Page Corresponding with selected entry is displayed")
 	public void PDP_Of_Selected_Result() {
 		p = new AmazonProductDetailsPage(driver);
-		System.out.println(p.getProductTitle());
+	}
+	
+	@After
+	public void afterScenario() {
+	  driver.close();
 	}
 }

@@ -21,7 +21,7 @@ public class AmazonSearchResultsPage extends BasePageObject {
 	List<WebElement> searchResults;
 	
 	public void verifyCorrectSearch(String searchText) {
-		Assert.assertTrue(searchResultsDisplay.getText().contains(searchText));
+		Assert.assertTrue("Incorrect item search on Amazon Search Results Page", searchResultsDisplay.getText().contains(searchText));
 	}
 	
 	public int getSearchResultsPerPage() {
@@ -34,7 +34,7 @@ public class AmazonSearchResultsPage extends BasePageObject {
 	
 	public void selectItemFromSearchResults(int i) {
 		if (searchResults.size() - 1 < i) {
-			Assert.assertTrue(false);
+			Assert.assertTrue("No items found on Amazon Search Page",false);
 		}
 		searchResults.get(i).click();
 	}
